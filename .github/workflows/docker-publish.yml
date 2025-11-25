@@ -1,4 +1,5 @@
 name: FastAPI CI Pipeline
+
 on:
   push:
     branches: [ "main" ]
@@ -6,12 +7,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up QEMU
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU (multi-arch support)
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
@@ -23,7 +26,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image (linux/amd64)
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -31,3 +34,10 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/fastapi-employee:latest
+
+      # Optional: Auto-deploy to Render using Deploy Hook
+      - name: Trigger Render Deploy (optional)
+        if: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          echo "Triggering Render deploy..."
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
