@@ -35,8 +35,19 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/fastapi-employee:latest
 
-      - name: Trigger Render Deploy (optional)
-        if: ${{ secrets.RENDER_DEPLOY_HOOK != '' }}
+      # Store secret into ENV (ALLOWED)
+      - name: Check for deploy hook
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "RENDER_DEPLOY_HOOK not set"
+            echo "HAS_HOOK=false" >> $GITHUB_ENV
+          else
+            echo "HAS_HOOK=true" >> $GITHUB_ENV
+          fi
+
+      # Now safely condition on env var
+      - name: Trigger Render Deploy
+        if: env.HAS_HOOK == 'true'
         run: |
           echo "Triggering Render deploy..."
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
