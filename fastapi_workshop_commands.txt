@@ -1,11 +1,72 @@
-# FASTAPI WORKSHOP COMMANDS
 
+====================================
+FASTAPI WORKSHOP – FULL COMMANDS LIST
+====================================
+
+------------------------------------
+1. PYTHON & VIRTUAL ENVIRONMENT
+------------------------------------
 python3 -m venv venv
 source venv/bin/activate
+python3 -m pip install --upgrade pip
 pip install -r requirements.txt
-python -m uvicorn app:app --reload
 
+------------------------------------
+2. RUN FASTAPI APP (app.py)
+------------------------------------
+python3 -m uvicorn app:app --reload --host 127.0.0.1 --port 8000
+
+------------------------------------
+3. GIT COMMANDS
+------------------------------------
+git status
+git add .
+git commit -m "message"
+git push origin main
+git pull origin main --rebase
+git commit --allow-empty -m "trigger CI"
+
+------------------------------------
+4. DOCKER BASIC COMMANDS
+------------------------------------
+docker build -t fastapi-employee .
+docker run -p 8000:8000 fastapi-employee
+docker ps
+docker stop <container>
+
+------------------------------------
+5. MULTI-ARCH BUILDX COMMANDS
+------------------------------------
 docker buildx create --use
+docker buildx inspect --bootstrap
 docker buildx build --platform linux/amd64 -t fastapi-employee --load .
-docker tag fastapi-employee DOCKER_USERNAME/fastapi-employee:latest
-docker push DOCKER_USERNAME/fastapi-employee:latest
+
+------------------------------------
+6. PUSH IMAGE TO DOCKER HUB
+------------------------------------
+docker tag fastapi-employee USERNAME/fastapi-employee:latest
+docker login
+docker push USERNAME/fastapi-employee:latest
+
+------------------------------------
+7. GITHUB ACTIONS CI WORKFLOW
+------------------------------------
+Located at:
+.github/workflows/docker-publish.yml
+
+Runs automatically on push.
+
+------------------------------------
+8. RENDER DEPLOYMENT
+------------------------------------
+Deploy → New Web Service → Deploy from Docker Image
+Image:
+USERNAME/fastapi-employee:latest
+
+------------------------------------
+9. COMMON ISSUES
+------------------------------------
+Port in use → kill process
+Token wrong → create RW token
+ARM64 build error → use buildx amd64
+Workflow fails → fix secrets
