@@ -9,7 +9,7 @@ CRUD API with:
 
 Run locally:
 ```
-uvicorn main:app --reload
+uvicorn app:app --reload
 ```
 
 Docker:
