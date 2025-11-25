@@ -13,5 +13,5 @@ jobs:
         with:
           python-version: "3.10"
       - run: pip install -r requirements.txt
-      - run: python -m py_compile main.py
+      - run: python -m py_compile app.py
       - run: docker build -t fastapi-employee .
