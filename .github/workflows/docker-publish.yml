@@ -35,9 +35,8 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/fastapi-employee:latest
 
-      # Optional: Auto-deploy to Render using Deploy Hook
       - name: Trigger Render Deploy (optional)
-        if: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        if: ${{ secrets.RENDER_DEPLOY_HOOK != '' }}
         run: |
           echo "Triggering Render deploy..."
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
